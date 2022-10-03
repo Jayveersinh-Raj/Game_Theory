@@ -9,12 +9,10 @@ use the following to run "python3 JayveersinhRaj.py"
 '''
 
 # Imports 
-from hashlib import new
 import random
 import os
 import glob
 import sys
-import math
 
 # QTDesigner imports
 from PyQt5 import QtCore, QtWidgets
@@ -1090,8 +1088,6 @@ class Ui_Form3(object):
 
           # If user is more than max move ahead, he has a strategy to win
           if(prev_pos_user >= new_pos + (day + month)):
-               print("I am here")
-               print(prev_pos_user >= new_pos + (day + month))
 
              # Update the advice textbrowser to show there exists no winning strategy for the user
                self.textAdvice.setText("There exist a winning startegy for you")
@@ -1100,8 +1096,6 @@ class Ui_Form3(object):
           # There exists winning strategy for the user
           elif(new_pos <= prev_pos_user + (day + month) and (i_user == (day + month + year) or i_bot < (day + month + year))):
                 
-               print(f"I bot : {i_bot}") 
-               print(f"I user: {i_user}")
                # Update the advice textbrowser to show there exists no winning strategy for the user
                self.textAdvice.setText("There exist a winning startegy for you")
           
