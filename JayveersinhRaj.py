@@ -9,10 +9,12 @@ use the following to run "python3 JayveersinhRaj.py"
 '''
 
 # Imports 
+from hashlib import new
 import random
 import os
 import glob
 import sys
+import math
 
 # QTDesigner imports
 from PyQt5 import QtCore, QtWidgets
@@ -336,19 +338,19 @@ class Ui_Form3(object):
           self.textB .setStyleSheet("QTextBrowser {\n"
                                          "    border-radius : 25px;\n"
                                          "}")
-          user_random_position = self.spawn_spolier(option = self.pos)
+          user_random_position = self.spawn_spolier()
           self.textB.setText(str(user_random_position))
 
           self.label_bot_spawn = QtWidgets.QLabel(Form3)
           self.label_bot_spawn.setGeometry(QtCore.QRect(350, 40, 179, 21))
           self.label_bot_spawn.setObjectName("Duplicator_Spawn")
-          self.textB_spawn = QtWidgets.QTextBrowser(Form3)
-          self.textB_spawn.setGeometry(QtCore.QRect(530, 40, 142, 31))
-          self.textB_spawn.setStyleSheet("QTextBrowser {\n"
+          self.textB_bot_pos = QtWidgets.QTextBrowser(Form3)
+          self.textB_bot_pos.setGeometry(QtCore.QRect(530, 40, 142, 31))
+          self.textB_bot_pos.setStyleSheet("QTextBrowser {\n"
                                          "    border-radius : 25px;\n"
                                          "}")
-          init_bot_position = self.spawn_spawn_spolierlicator()
-          self.textB_spawn.setText(str(init_bot_position))
+          init_bot_position = self.spawn_spawn_Duplicator()
+          self.textB_bot_pos.setText(str(init_bot_position))
 
           # Hide the start button if Random mode is selected
           self.button_start.hide()
@@ -359,9 +361,9 @@ class Ui_Form3(object):
           self.label_bot_spawn = QtWidgets.QLabel(Form3)
           self.label_bot_spawn.setGeometry(QtCore.QRect(470, 40, 179, 21))
           self.label_bot_spawn.setObjectName("Duplicator_Spawn")
-          self.textB_spawn = QtWidgets.QTextBrowser(Form3)
-          self.textB_spawn.setGeometry(QtCore.QRect(620, 40, 142, 31))
-          self.textB_spawn.setStyleSheet("QTextBrowser {\n"
+          self.textB_bot_pos = QtWidgets.QTextBrowser(Form3)
+          self.textB_bot_pos.setGeometry(QtCore.QRect(620, 40, 142, 31))
+          self.textB_bot_pos.setStyleSheet("QTextBrowser {\n"
                                          "    border-radius : 25px;\n"
                                          "}")
          
@@ -529,7 +531,7 @@ class Ui_Form3(object):
         # If Random is the position mode then calls play function for the bot to play its turn when window opens
         if(pos_mode == 1):
             bot_spawn = init_bot_position
-            self.textB_spawn.setText(str(bot_spawn))
+            self.textB_bot_pos.setText(str(bot_spawn))
             self.play(bot_spawn, int(user_random_position), str(self.play_m))
 
 
@@ -539,8 +541,8 @@ class Ui_Form3(object):
     def retranslateUi(self, Form3):
         _translate = QtCore.QCoreApplication.translate
         Form3.setWindowTitle(_translate("Form3", "Spoiler-Duplicator Game"))
-        self.label_pos_user.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">You spawn at :</span></p></body></html>"))
-        self.label_bot_spawn.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">Duplicator spawn :</span></p></body></html>"))
+        self.label_pos_user.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">Position:</span></p></body></html>"))
+        self.label_bot_spawn.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">Duplicator Position :</span></p></body></html>"))
         self.button_start.setText(_translate("Form3", "Start"))
         self.label_duplicator_move.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">Duplicator move is :</span></p></body></html>"))
         self.label_duplicator_result.setText(_translate("Form3", "<html><head/><body><p><span style=\" font-size:9pt;\">, it results in :</span></p></body></html>"))
@@ -653,11 +655,11 @@ class Ui_Form3(object):
             # Hide the start button, and move the Duplicator spawn label and text browser to left
             self.button_start.hide()
             self.label_bot_spawn.move(350, 40)
-            self.textB_spawn.move(510, 40)
+            self.textB_bot_pos.move(510, 40)
 
             # Spawn the bot
-            bot_spawn = self.spawn_spawn_spolierlicator()
-            self.textB_spawn.setText(str(bot_spawn))
+            bot_spawn = self.spawn_spawn_Duplicator()
+            self.textB_bot_pos.setText(str(bot_spawn))
             
             # Disable the input position from user to disable the alteration
             self.lineEdit_user_pos.setReadOnly(True)
@@ -798,8 +800,8 @@ class Ui_Form3(object):
 
 
 
-    # Function that spawns the spawn_spolierlicator (Bot)
-    def spawn_spawn_spolierlicator(self):
+    # Function that spawns the spawn_Duplicator (Bot)
+    def spawn_spawn_Duplicator(self):
         # Spawning of Duplicator (Bot) at a valid Random position
         init_position = random.randint(0, day+month+year)
 
@@ -812,8 +814,8 @@ class Ui_Form3(object):
 
     
     
-    # Function that spawns a spawn_spolierlicator (user) based on his/her choice. Satisfies 2.
-    def spawn_spolier(self, option):
+    # Function that spawns a spawn_Duplicator (user) based on his/her choice. Satisfies 2.
+    def spawn_spolier(self):
 
         # Spawing the player at a valid random position if random position mode is selected
         init_position = random.randint(0, day+month+year)
@@ -839,6 +841,14 @@ class Ui_Form3(object):
           
           # Display the new valid position to the textBrowser
           self.textB_user_move_result.setText(str(int(move) + prev_pos_user))
+
+          # Displaying the Position textbrowser with the new position if position mode is random
+          if(self.pos == 1):
+              self.textB.setText(str(int(move) + prev_pos_user))
+
+          # Displaying the Position textbrowser with the new position if position mode is user defined
+          if(self.pos == 2):
+              self.lineEdit_user_pos.setText(str(int(move) + prev_pos_user))
 
           # Append the valid moves to the logs
           log["You"].append(int(move) + prev_pos_user) 
@@ -935,9 +945,12 @@ class Ui_Form3(object):
                                                   f"\n\nYour positions: {str(log['You'])}\nYour moves:"
                                                   f"{str(log['Your_moves'])}")
 
-          # Updating the Duplicator(bot) position and move text browsers
+          # Updating the Duplicator(bot) result position and move text browsers
           self.textBrowser_bot_move.setText(str(move))
           self.textBrowser_bot_position.setText(str(new_pos))
+
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
          
     
         # If goal can be achieved within the (day + month + year), reach the goal
@@ -948,6 +961,9 @@ class Ui_Form3(object):
           # Updating the Duplicator(bot) position and move text browsers
           self.textBrowser_bot_move.setText(str(move))
           self.textBrowser_bot_position.setText(str(new_pos))
+
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
 
           # Appending the move and position to the dictionary
           log["Bot"].append(new_pos)
@@ -986,6 +1002,9 @@ class Ui_Form3(object):
           # Updating the Duplicator(bot) position and move text browsers
           self.textBrowser_bot_position.setText(str(new_pos))
           self.textBrowser_bot_move.setText(str(move))
+
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
 
           # Append the move and position to the logs dictionary
           log["Bot"].append(new_pos)
@@ -1029,7 +1048,11 @@ class Ui_Form3(object):
           # Updating the Duplicator(bot) position and move text browsers                                            
           self.textBrowser_bot_move.setText(str(move))
           self.textBrowser_bot_position.setText(str(new_pos))
+
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
           return
+    
     
     
       # The smart moves by the spoiler (bot) if player chooses advisor as the play mode. Satisifies 3.3
@@ -1048,6 +1071,9 @@ class Ui_Form3(object):
           self.textBrowser_bot_position.setText(str(new_pos))
           self.textBrowser_bot_move.setText(str(move))
 
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
+
           # If logs are visible update them real time
           if(self.logs == True):
             self.textBrowser_display_logs.setText(f"Bot positions: {str(log['Bot'])}\nBot moves:"
@@ -1055,19 +1081,38 @@ class Ui_Form3(object):
                                                   f"\n\nYour positions: {str(log['You'])}\nYour moves:"
                                                   f"{str(log['Your_moves'])}")
           
+
           
           # The advices of existing winning strategies
-          # If there is no winning strategy for the user
-          if(prev_pos_user <= new_pos and prev_pos_user <= new_pos + (day + month)):
+          # These i_bot and i_user are using the theorum calculated to see where they could reach using max moves
+          i_bot = int(new_pos + (int(round((day + month + year) - new_pos) / (day + month)) * (day + month)))
+          i_user = int(round((day + month + year) - prev_pos_user) / (day + month)) * (day + month) + prev_pos_user
 
-            # Update the advice textbrowser to show there exists no winning strategy for the user
-            self.textAdvice.setText("Unfortunately, there is no winning strategy for you..!! :{")
+          # If user is more than max move ahead, he has a strategy to win
+          if(prev_pos_user >= new_pos + (day + month)):
+               print("I am here")
+               print(prev_pos_user >= new_pos + (day + month))
+
+             # Update the advice textbrowser to show there exists no winning strategy for the user
+               self.textAdvice.setText("There exist a winning startegy for you")
+
+          # If a bot cannot reach goal without changing moves from its position, when they are closer than day + month moves
+          # There exists winning strategy for the user
+          elif(new_pos <= prev_pos_user + (day + month) and (i_user == (day + month + year) or i_bot < (day + month + year))):
+                
+               print(f"I bot : {i_bot}") 
+               print(f"I user: {i_user}")
+               # Update the advice textbrowser to show there exists no winning strategy for the user
+               self.textAdvice.setText("There exist a winning startegy for you")
           
+          # If the above conditions does not meet, user has no winning strategy
           else:
 
-            # Update the advice textbrowser to show there exists winning strategy for the user
-            self.textAdvice.setText("There exist a winning startegy for you")
+             # Update the advice textbrowser to show there exists winning strategy for the user
+             self.textAdvice.setText("Unfortunately, there is no winning strategy for you..!! :{")
     
+
+
         # If goal can be achieved within the (day + month + year), reach the goal
         elif(prev_pos_bot > (day + month + year) - (day + month)):
           move = ((day + month + year) - prev_pos_bot)
@@ -1076,6 +1121,9 @@ class Ui_Form3(object):
           # Updating the Duplicator(bot) position and move text browsers
           self.textBrowser_bot_move.setText(str(move))
           self.textBrowser_bot_position.setText(str(new_pos))
+
+          # Updating the Duplicator pos. textbrowser
+          self.textB_bot_pos.setText(str(new_pos))
 
           # Appending the logs dictionary with the move and position
           log["Bot"].append(new_pos)
